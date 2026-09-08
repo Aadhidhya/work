@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard Overview</h2>
+<div class="cards">
+    <div class="card" style="border-left-color: #3b82f6;">
+        <h3>Total Students</h3>
+        <p>{{ students }}</p>
+    </div>
+    <div class="card" style="border-left-color: #10b981;">
+        <h3>Total Rooms</h3>
+        <p>{{ rooms }}</p>
+    </div>
+    <div class="card" style="border-left-color: #f59e0b;">
+        <h3>Vacant Rooms</h3>
+        <p>{{ vacant }}</p>
+    </div>
+    <div class="card" style="border-left-color: #ef4444;">
+        <h3>Pending Dues</h3>
+        <p>₹{{ "%.2f"|format(dues) }}</p>
+    </div>
+</div>
+{% endblock %}

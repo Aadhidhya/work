@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Hostel Collection & Occupancy Reports</h2>
+<div class="cards">
+    <div class="card" style="border-left-color: #3b82f6;">
+        <h3>Occupancy Rate</h3>
+        <p>{{ occupied_rooms }} / {{ total_rooms }} Rooms</p>
+    </div>
+    <div class="card" style="border-left-color: #10b981;">
+        <h3>Total Collection</h3>
+        <p>₹{{ "%.2f"|format(total_collection) }}</p>
+    </div>
+    <div class="card" style="border-left-color: #f59e0b;">
+        <h3>Vacant Rooms</h3>
+        <p>{{ vacant_rooms }}</p>
+    </div>
+</div>
+
+<div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-top: 25px;">
+    <h3>Summary Breakdown</h3>
+    <ul style="line-height: 1.8; color: #475569;">
+        <li>Total Registered Students: <strong>{{ total_students }}</strong></li>
+        <li>Total Hostel Blocks & Rooms Managed: <strong>{{ total_rooms }} Rooms</strong></li>
+        <li>Current Room Occupancy: <strong>{{ "%.1f"|format((occupied_rooms / total_rooms * 100) if total_rooms > 0 else 0) }}%</strong></li>
+        <li>Successfully Verified Total Revenue Collected: <strong>₹{{ "%.2f"|format(total_collection) }}</strong></li>
+    </ul>
+</div>
+{% endblock %}

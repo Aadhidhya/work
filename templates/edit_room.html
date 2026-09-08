@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Room: Room {{ room.room_number }}</h2>
+<form method="POST">
+    <input type="text" name="room_number" value="{{ room.room_number }}" placeholder="Room Number" required>
+    <select name="room_type" required>
+        <option value="Single" {% if room.room_type == 'Single' %}selected{% endif %}>Single</option>
+        <option value="Double" {% if room.room_type == 'Double' %}selected{% endif %}>Double</option>
+        <option value="Dormitory" {% if room.room_type == 'Dormitory' %}selected{% endif %}>Dormitory</option>
+    </select>
+    <input type="number" name="bed_count" value="{{ room.bed_count }}" placeholder="Bed Count" required min="1">
+    <select name="status" required>
+        <option value="Vacant" {% if room.status == 'Vacant' %}selected{% endif %}>Vacant</option>
+        <option value="Occupied" {% if room.status == 'Occupied' %}selected{% endif %}>Occupied</option>
+    </select>
+    <button type="submit">Update Room</button>
+    <a href="{{ url_for('manage_rooms') }}" class="btn btn-secondary" style="text-align:center; display:flex; align-items:center; justify-content:center;">Cancel</a>
+</form>
+{% endblock %}

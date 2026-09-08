@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Hostel Rooms Overview (Editable)</h2>
+<form method="POST">
+    <select name="block_select" id="block_select" onchange="toggleManualBlock(this)">
+        <option value="">Select Block</option>
+        {% for block in blocks %}
+        <option value="{{ block.block_id }}">{{ block.block_name }}</option>
+        {% endfor %}
+        <option value="manual">-- Type New Block Name --</option>
+    </select>
+    <input type="text" name="block_manual" id="block_manual" placeholder="Enter New Block Name" style="display:none;">
+    
+    <input type="text" name="room_number" placeholder="Room Number (e.g., 103)" required>
+    <select name="room_type" required>
+        <option value="">Room Type</option>
+        <option value="Single">Single</option>
+        <option value="Double">Double</option>
+        <option value="Dormitory">Dormitory</option>
+    </select>
+    <input type="number" name="bed_count" placeholder="Bed Count" required min="1">
+    <button type="submit">Add Room</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Block Name</th>
+            <th>Room Number</th>
+            <th>Room Type</th>
+            <th>Bed Count</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in rooms %}
+        <tr>
+            <td>{{ r.block_name }}</td>
+            <td>{{ r.room_number }}</td>
+            <td>{{ r.room_type }}</td>
+            <td>{{ r.bed_count }}</td>
+            <td><span class="badge {{ 'badge-occupied' if r.status == 'Occupied' else 'badge-vacant' }}">{{ r.status }}</span></td>
+            <td>
+                <div style="display: flex; gap: 8px;">
+                    <a href="{{ url_for('edit_room', room_id=r.room_id) }}" class="btn" style="padding: 6px 12px; font-size: 0.8rem;">Edit</a>
+                    <form action="{{ url_for('delete_room', room_id=r.room_id) }}" method="POST" style="margin:0; padding:0; background:none; box-shadow:none;">
+                        <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="return confirm('Deleting room will unassign residents. Continue?')">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" style="text-align: center; color: #64748b;">No rooms found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function toggleManualBlock(selectObj) {
+    const manualInput = document.getElementById('block_manual');
+    if (selectObj.value === 'manual') {
+        manualInput.style.display = 'block';
+        manualInput.required = true;
+        selectObj.removeAttribute('required');
+    } else {
+        manualInput.style.display = 'none';
+        manualInput.required = false;
+        manualInput.value = '';
+        selectObj.setAttribute('required', 'required');
+    }
+}
+</script>
+{% endblock %}

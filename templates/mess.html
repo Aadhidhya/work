@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Mess Bill & Attendance Tracking</h2>
+<form method="POST">
+    <select name="student_id" id="student_select" onchange="toggleManualStudent(this)">
+        <option value="">Select Student</option>
+        {% for student in students %}
+        <option value="{{ student.student_id }}">{{ student.name }}</option>
+        {% endfor %}
+        <option value="manual">-- Type Name Manually --</option>
+    </select>
+    <input type="text" name="student_manual" id="student_manual" placeholder="Enter Student Name" style="display:none;">
+
+    <select name="month_select" id="month_select" onchange="toggleManualMonth(this)">
+        <option value="">Select Month (12 Months)</option>
+        {% for m in months %}
+        <option value="{{ m }}">{{ m }}</option>
+        {% endfor %}
+        <option value="manual">-- Type Month Manually --</option>
+    </select>
+    <input type="text" name="month_manual" id="month_manual" placeholder="Enter Month (e.g. October 2026)" style="display:none;">
+
+    <input type="number" step="0.01" name="extra_charges" placeholder="Extra Food Charges (₹)" value="0">
+    <select name="payment_status" required>
+        <option value="Due">Due</option>
+        <option value="Paid">Paid</option>
+    </select>
+    <button type="submit">Generate Bill</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Month</th>
+            <th>Mess Fee</th>
+            <th>Extras</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bills %}
+        <tr>
+            <td>{{ b.name }}</td>
+            <td>{{ b.month }}</td>
+            <td>₹{{ "%.2f"|format(b.mess_fee) }}</td>
+            <td>₹{{ "%.2f"|format(b.extra_charges) }}</td>
+            <td><strong>₹{{ "%.2f"|format(b.mess_fee + b.extra_charges) }}</strong></td>
+            <td><span class="badge {{ 'badge-occupied' if b.payment_status == 'Due' else 'badge-vacant' }}">{{ b.payment_status }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" style="text-align: center; color: #64748b;">No mess bills recorded.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function toggleManualStudent(selectObj) {
+    const manualInput = document.getElementById('student_manual');
+    if (selectObj.value === 'manual') {
+        manualInput.style.display = 'block';
+        manualInput.required = true;
+    } else {
+        manualInput.style.display = 'none';
+        manualInput.required = false;
+        manualInput.value = '';
+    }
+}
+function toggleManualMonth(selectObj) {
+    const manualInput = document.getElementById('month_manual');
+    if (selectObj.value === 'manual') {
+        manualInput.style.display = 'block';
+        manualInput.required = true;
+    } else {
+        manualInput.style.display = 'none';
+        manualInput.required = false;
+        manualInput.value = '';
+    }
+}
+</script>
+{% endblock %}

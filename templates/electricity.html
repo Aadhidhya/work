@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Electricity Utility Tracking</h2>
+<form method="POST">
+    <select name="room_id" required>
+        <option value="">Select Room</option>
+        {% for room in rooms %}
+        <option value="{{ room.room_id }}">Room {{ room.room_number }} ({{ room.block_name }})</option>
+        {% endfor %}
+    </select>
+
+    <select name="month_select" id="month_select" onchange="toggleManualMonth(this)" required>
+        <option value="">Select Month (12 Months)</option>
+        {% for m in months %}
+        <option value="{{ m }}">{{ m }}</option>
+        {% endfor %}
+        <option value="manual">-- Type Month Manually --</option>
+    </select>
+    <input type="text" name="month_manual" id="month_manual" placeholder="Enter Month (e.g. October 2026)" style="display:none;">
+
+    <input type="number" step="0.1" name="units_consumed" placeholder="Units Consumed (kWh)" required min="0">
+    <select name="payment_status" required>
+        <option value="Due">Due</option>
+        <option value="Paid">Paid</option>
+    </select>
+    <button type="submit">Add Electricity Bill</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Block & Room</th>
+            <th>Month</th>
+            <th>Units Consumed</th>
+            <th>Amount (₹7.5/unit)</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for eb in e_bills %}
+        <tr>
+            <td>{{ eb.block_name }} - Room {{ eb.room_number }}</td>
+            <td>{{ eb.month }}</td>
+            <td>{{ eb.units_consumed }} kWh</td>
+            <td><strong>₹{{ "%.2f"|format(eb.amount) }}</strong></td>
+            <td><span class="badge {{ 'badge-occupied' if eb.payment_status == 'Due' else 'badge-vacant' }}">{{ eb.payment_status }}</span></td>
+            <td><form method="POST" action="{{ url_for('delete_electricity', e_bill_id=eb.e_bill_id) }}" onsubmit="return confirm('Delete this electricity bill?');"><button type="submit" class="btn-danger">Delete</button></form></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" style="text-align: center; color: #64748b;">No electricity records found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function toggleManualMonth(selectObj) {
+    const manualInput = document.getElementById('month_manual');
+    if (selectObj.value === 'manual') {
+        manualInput.style.display = 'block';
+        manualInput.required = true;
+        selectObj.removeAttribute('required');
+    } else {
+        manualInput.style.display = 'none';
+        manualInput.required = false;
+        manualInput.value = '';
+        selectObj.setAttribute('required', 'required');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostelHub - Accommodation & Mess</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <aside>
+        <div class="brand">
+            <div class="logo-box">H</div>
+            <div>
+                <h2>HostelHub</h2>
+                <p>Accommodation & Mess</p>
+            </div>
+        </div>
+        <ul>
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">🏠 Dashboard</a></li>
+            <li><a href="{{ url_for('manage_students') }}" class="{% if request.endpoint == 'manage_students' %}active{% endif %}">🎓 Students</a></li>
+            <li><a href="{{ url_for('manage_rooms') }}" class="{% if request.endpoint == 'manage_rooms' or request.endpoint == 'edit_room' %}active{% endif %}">🏢 Rooms & Blocks</a></li>
+            <li><a href="{{ url_for('manage_mess') }}" class="{% if request.endpoint == 'manage_mess' %}active{% endif %}">🍽️ Mess Management</a></li>
+            <li><a href="{{ url_for('manage_electricity') }}" class="{% if request.endpoint == 'manage_electricity' %}active{% endif %}">⚡ Electricity</a></li>
+            <li><a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">📊 Reports</a></li>
+        </ul>
+    </aside>
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>
